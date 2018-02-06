@@ -34,6 +34,7 @@ namespace HearMeApp.Android
         {
             base.OnDestroy();
 
+            _mediaPlayer.Release();
             PlayButton.Click -= OnPlayButtonClick;
         }
     }
