@@ -37,7 +37,7 @@ Task("Info")
     .IsDependentOn("Upload-To-HockeyApp")
 	.Does(() => {
 		Information(@"Build version: {BuildSystem.AppVeyor.Environment.Build.Version}");
-	})
+	});
 
 Task("Default").IsDependentOn("Info");
 
