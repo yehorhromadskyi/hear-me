@@ -1,5 +1,6 @@
 #addin Cake.HockeyApp
 #addin Cake.AppVeyor
+#addin nuget:?package=System.Net.Http&version=4.1.0.0
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
@@ -37,7 +38,7 @@ Task("Upload-To-HockeyApp")
 Task("Info")
     .IsDependentOn("Upload-To-HockeyApp")
 	.Does(() => {
-		Information(@"Build version: {BuildSystem.AppVeyor.Environment.Build.Version}");
+		Information(@"Build version: {0}", BuildSystem.AppVeyor.Environment.Build.Version);
 	});
 
 Task("Default").IsDependentOn("Info");
