@@ -1,3 +1,7 @@
+#addin Cake.HockeyApp
+
+var HOCKEYAPP_API_TOKEN = EnvironmentVariable("cc9c3ebafbc94d588a6469f09e57b79b");
+
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
@@ -16,24 +20,20 @@ Task("Restore-NuGet-Packages")
 	    NuGetRestore("./src/HearMeApp.Android.sln");
 	});
 
-	Task("Build")
-    .IsDependentOn("Restore-NuGet-Packages")
-    .Does(() =>
+Task("Build")
+	.IsDependentOn("Restore-NuGet-Packages")
+	.Does(() =>
 	{
-	    if(IsRunningOnWindows())
-	    {
-	      // Use MSBuild
-	      MSBuild("./src/HearMeApp.Android.sln", settings =>
-	        settings.SetConfiguration(configuration));
-	    }
-	    else
-	    {
-	      // Use XBuild
-	      XBuild("./src/HearMeApp.Android.sln", settings =>
-	        settings.SetConfiguration(configuration));
-	    }
+	   MSBuild("./src/HearMeApp.Android.sln", new MSBuildSettings {
+			Verbosity = Verbosity.Minimal,
+			Configuration = configuration
+	    });
 	});
 
-Task("Default").IsDependentOn("Build");
+Task("Upload-To-HockeyApp")
+    .IsDependentOn("Build")
+    .Does(() => UploadToHockeyApp("./src/HearMeApp.Android/bin/Release/HearMeApp.Android.apk"));
+
+Task("Default").IsDependentOn("Upload-To-HockeyApp");
 
 RunTarget(target);
