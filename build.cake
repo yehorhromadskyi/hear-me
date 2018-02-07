@@ -27,12 +27,12 @@ Task("Build")
 	   MSBuild("./src/HearMeApp.Android.sln", new MSBuildSettings {
 			Verbosity = Verbosity.Minimal,
 			Configuration = configuration
-	    });
+	    }.WithTarget("SignAndroidPackage"));
 	});
 
 Task("Upload-To-HockeyApp")
     .IsDependentOn("Build")
-    .Does(() => UploadToHockeyApp("./src/HearMeApp.Android/bin/Release/HearMeApp.Android.apk"));
+    .Does(() => UploadToHockeyApp(buildDir + "HearMeApp.Android.apk"));
 
 Task("Default").IsDependentOn("Upload-To-HockeyApp");
 
