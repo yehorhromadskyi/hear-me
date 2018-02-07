@@ -7,6 +7,8 @@ var configuration = Argument("configuration", "Release");
 
 var buildDir = Directory("./src/HearMeApp.Android/bin") + Directory(configuration);
 
+var assemblyInfoFile = File("./src/HearMeApp.Android/Properties/AssemblyInfo.cs");
+
 var version = BuildSystem.AppVeyor.Environment.Build.Version;
 var semVersion = string.Format("{0}.{1}", version, DateTime.Now);
 
@@ -17,6 +19,18 @@ Task("Clean")
 	    CleanDirectory(buildDir);
 	});
 
+Task("Update-AssemblyInfo")
+	.Does (() => 
+	{
+		CreateAssemblyInfo(assemblyInfoFile, new AssemblyInfoSettings() {
+			Product = "Hear me",
+			Version = version,
+			FileVersion = version,
+			InformationalVersion = semVersion,
+			Copyright = "Copyright (c) Yehor Hromadskyi"
+		});
+	});
+
 Task("Restore-NuGet-Packages")
     .IsDependentOn("Clean")
     .Does(() =>
@@ -24,20 +38,9 @@ Task("Restore-NuGet-Packages")
 	    NuGetRestore("./src/HearMeApp.Android.sln");
 	});
 
-Task("Update-AssemblyInfo")
-	    .Does (() => 
-		{
-			CreateAssemblyInfo(assemblyInfoFile, new AssemblyInfoSettings() {
-				Product = "Hear me",
-				Version = version,
-				FileVersion = version,
-				InformationalVersion = semVersion,
-				Copyright = "Copyright (c) Yehor Hromadskyi"
-			});
-	});
-
 Task("Build")
 	.IsDependentOn("Restore-NuGet-Packages")
+	.IsDependentOn("Update-AssemblyInfo")
 	.Does(() =>
 	{
 	   MSBuild("./src/HearMeApp.Android.sln", new MSBuildSettings {
