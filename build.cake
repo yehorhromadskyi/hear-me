@@ -1,7 +1,5 @@
 #addin Cake.HockeyApp
 
-var HOCKEYAPP_API_TOKEN = EnvironmentVariable("cc9c3ebafbc94d588a6469f09e57b79b");
-
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
