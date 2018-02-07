@@ -8,6 +8,7 @@ var buildDir = Directory("./src/HearMeApp.Android/bin") + Directory(configuratio
 Task("Clean")
 	.Does(() =>
 	{
+		CleanDirectory(Directory("./src/HearMeApp.Android/obj"));
 	    CleanDirectory(buildDir);
 	});
 
