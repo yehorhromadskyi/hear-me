@@ -32,7 +32,7 @@ Task("Build")
 
 Task("Upload-To-HockeyApp")
     .IsDependentOn("Build")
-    .Does(() => UploadToHockeyApp(buildDir.GetFilePath("HearMeApp.Android.apk")));
+    .Does(() => UploadToHockeyApp(buildDir + File("HearMeApp.Android.apk")));
 
 Task("Default").IsDependentOn("Upload-To-HockeyApp");
 
