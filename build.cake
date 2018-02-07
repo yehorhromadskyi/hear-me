@@ -1,4 +1,7 @@
 #addin Cake.HockeyApp
+#addin nuget:?package=Cake.AppVeyor
+#addin nuget:?package=Refit&version=3.0.0
+#addin nuget:?package=Newtonsoft.Json&version=9.0.1
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
@@ -33,6 +36,23 @@ Task("Upload-To-HockeyApp")
     .IsDependentOn("Build")
     .Does(() => UploadToHockeyApp(buildDir + File("HearMeApp.Android-Signed.apk")));
 
-Task("Default").IsDependentOn("Upload-To-HockeyApp");
+Task("Info")
+	.Does(() => 
+	{
+		Information(
+        @"Build:
+        Folder: {0}
+        Id: {1}
+        Number: {2}
+        Version: {3}",
+        BuildSystem.AppVeyor.Environment.Build.Folder,
+        BuildSystem.AppVeyor.Environment.Build.Id,
+        BuildSystem.AppVeyor.Environment.Build.Number,
+        BuildSystem.AppVeyor.Environment.Build.Version);
+	});
+
+Task("Default").IsDependentOn("Info");
+
+
 
 RunTarget(target);
