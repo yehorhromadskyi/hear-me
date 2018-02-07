@@ -34,7 +34,9 @@ Task("Build")
 
 Task("Upload-To-HockeyApp")
     .IsDependentOn("Build")
-    .Does(() => UploadToHockeyApp(buildDir + File("HearMeApp.Android-Signed.apk")));
+    .Does(() => UploadToHockeyApp(buildDir + File("HearMeApp.Android-Signed.apk"), new HockeyAppUploadSettings {
+		Version = BuildSystem.AppVeyor.Environment.Build.Version
+	}));
 
 Task("Info")
 	.Does(() => 
