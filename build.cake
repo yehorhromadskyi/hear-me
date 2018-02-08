@@ -44,7 +44,13 @@ Task("Build")
 	   MSBuild("./src/HearMeApp.Android.sln", new MSBuildSettings {
 			Verbosity = Verbosity.Minimal,
 			Configuration = configuration
-	    }.WithTarget("SignAndroidPackage"));
+	    }.WithTarget("SignAndroidPackage")
+		 .WithProperty("AndroidKeyStore", "true")
+         .WithProperty("AndroidSigningKeyAlias", "hearme")
+         .WithProperty("AndroidSigningStorePass", EnvironmentVariable("KEYSTORE_PASSWORD"))
+         .WithProperty("AndroidSigningKeyStore", "hearme.keystore")
+         .WithProperty("AndroidSigningKeyPass", EnvironmentVariable("KEYSTORE_PASSWORD"))
+         .WithProperty("DebugSymbols", "false"));
 	});
 
 Task("Upload-To-HockeyApp")
