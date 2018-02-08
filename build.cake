@@ -1,34 +1,32 @@
 #addin Cake.HockeyApp
+#addin Cake.AndroidAppManifest
 #addin Cake.AppVeyor
 #addin nuget:?package=System.Net.Http&version=4.1.0.0
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
-var buildDir = Directory("./src/HearMeApp.Android/bin") + Directory(configuration);
+var buildDirectory = Directory("./src/HearMeApp.Android/bin") + Directory(configuration);
 
-var assemblyInfoFile = File("./src/HearMeApp.Android/Properties/AssemblyInfo.cs");
+var manifestFile = File("./src/App.Droid/Properties/AndroidManifest.xml");
 
 var version = BuildSystem.AppVeyor.Environment.Build.Version;
-var semVersion = string.Format("{0}.{1}", version, DateTime.Now);
 
 Task("Clean")
 	.Does(() =>
 	{
 		CleanDirectory(Directory("./src/HearMeApp.Android/obj"));
-	    CleanDirectory(buildDir);
+	    CleanDirectory(buildDirectory);
 	});
 
-Task("Update-AssemblyInfo")
-	.Does (() => 
+Task("Update-AndroidManifest")
+    .Does (() =>
 	{
-		CreateAssemblyInfo(assemblyInfoFile, new AssemblyInfoSettings() {
-			Product = "Hear me",
-			Version = version,
-			FileVersion = version,
-			InformationalVersion = semVersion,
-			Copyright = "Copyright (c) Yehor Hromadskyi"
-		});
+	    var manifest = DeserializeAppManifest(manifestFile);
+	    manifest.VersionName = version;
+	    manifest.VersionCode = version;
+	
+	    SerializeAppManifest(manifestFile, manifest);
 	});
 
 Task("Restore-NuGet-Packages")
@@ -40,7 +38,7 @@ Task("Restore-NuGet-Packages")
 
 Task("Build")
 	.IsDependentOn("Restore-NuGet-Packages")
-	.IsDependentOn("Update-AssemblyInfo")
+	.IsDependentOn("Update-AndroidManifest")
 	.Does(() =>
 	{
 	   MSBuild("./src/HearMeApp.Android.sln", new MSBuildSettings {
@@ -51,7 +49,7 @@ Task("Build")
 
 Task("Upload-To-HockeyApp")
     .IsDependentOn("Build")
-    .Does(() => UploadToHockeyApp(buildDir + File("HearMeApp.Android-Signed.apk")));
+    .Does(() => UploadToHockeyApp(buildDirectory + File("HearMeApp.Android-Signed.apk")));
 
 Task("Info")
     .IsDependentOn("Upload-To-HockeyApp")
