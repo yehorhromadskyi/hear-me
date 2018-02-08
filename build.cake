@@ -11,6 +11,7 @@ var buildDirectory = Directory("./src/HearMeApp.Android/bin") + Directory(config
 var manifestFile = File("./src/HearMeApp.Android/Properties/AndroidManifest.xml");
 
 var version = BuildSystem.AppVeyor.Environment.Build.Version;
+var versionCode = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
 
 Task("Clean")
 	.Does(() =>
@@ -24,7 +25,7 @@ Task("Update-AndroidManifest")
 	{
 	    var manifest = DeserializeAppManifest(manifestFile);
 	    manifest.VersionName = version;
-	    manifest.VersionCode = Int32.Parse(version.Replace(".", string.Empty));
+	    manifest.VersionCode = versionCode;
 	
 	    SerializeAppManifest(manifestFile, manifest);
 	});
@@ -54,7 +55,7 @@ Task("Upload-To-HockeyApp")
 Task("Info")
     .IsDependentOn("Upload-To-HockeyApp")
 	.Does(() => {
-		Information(@"Build version: {0}", version);
+		Information(@"Build version: {0}, code: {1}", version, versionCode);
 	});
 
 Task("Default").IsDependentOn("Info");
