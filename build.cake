@@ -8,7 +8,7 @@ var configuration = Argument("configuration", "Release");
 
 var buildDirectory = Directory("./src/HearMeApp.Android/bin") + Directory(configuration);
 
-var manifestFile = File("./src/App.Droid/Properties/AndroidManifest.xml");
+var manifestFile = File("./src/HearMeApp.Android/Properties/AndroidManifest.xml");
 
 var version = BuildSystem.AppVeyor.Environment.Build.Version;
 
