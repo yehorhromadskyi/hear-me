@@ -23,8 +23,8 @@ Task("Update-AndroidManifest")
     .Does (() =>
 	{
 	    var manifest = DeserializeAppManifest(manifestFile);
-	    manifest.VersionName = version.ToString();
-	    manifest.VersionCode = version;
+	    manifest.VersionName = version;
+	    manifest.VersionCode = Int32.Parse(version.Replace(".", string.Empty));
 	
 	    SerializeAppManifest(manifestFile, manifest);
 	});
