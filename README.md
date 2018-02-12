@@ -1,5 +1,3 @@
 # Hear me
 
-|  branch  | status |
-| -------- | ------ |
-|  develop | ![appveyor](https://ci.appveyor.com/api/projects/status/github/yehorhromadskyi/hear-me?branch=develop&svg=true) |
+![appveyor](https://ci.appveyor.com/api/projects/status/github/yehorhromadskyi/hear-me?branch=master&svg=true)
