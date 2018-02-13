@@ -1,9 +1,8 @@
 ﻿using Android.App;
-using Android.Widget;
-using Android.OS;
 using Android.Media;
-using Android.Content;
-using Java.Lang;
+using Android.OS;
+using Android.Widget;
+using HockeyApp.Android;
 
 namespace HearMeApp.Android
 {
@@ -37,6 +36,13 @@ namespace HearMeApp.Android
             _audioService = (AudioManager)GetSystemService(AudioService);
 
             _userVolume = _audioService.GetStreamVolume(Stream.Music);
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+
+            CrashManager.Register(this, Secrets.HockeyAppId);
         }
 
         private void OnPlayButtonClick(object sender, System.EventArgs e)

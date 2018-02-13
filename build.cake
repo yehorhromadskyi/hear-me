@@ -1,3 +1,4 @@
+#addin Cake.FileHelpers
 #addin Cake.HockeyApp
 #addin Cake.AndroidAppManifest
 #addin Cake.AppVeyor
@@ -20,13 +21,19 @@ Task("Clean")
 	});
 
 Task("Update-AndroidManifest")
-    .Does (() =>
+    .Does(() =>
 	{
 	    var manifest = DeserializeAppManifest(manifestFile);
 	    manifest.VersionName = version;
 	    manifest.VersionCode = 1;
 	
 	    SerializeAppManifest(manifestFile, manifest);
+	});
+
+Task("Update-Secrets")
+    .Does(() =>
+	{
+		ReplaceTextInFiles("src/HearMeApp.Android/Secrets.cs", "APP_ID", EnvironmentVariable("HOCKEYAPP_APP_ID")); 
 	});
 
 Task("Restore-NuGet-Packages")
@@ -39,6 +46,7 @@ Task("Restore-NuGet-Packages")
 Task("Build")
 	.IsDependentOn("Restore-NuGet-Packages")
 	.IsDependentOn("Update-AndroidManifest")
+	.IsDependentOn("Update-Secrets")
 	.Does(() =>
 	{
 	   MSBuild("./src/HearMeApp.Android.sln", new MSBuildSettings {
