@@ -1,37 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Telephony;
-using Android.Views;
-using Android.Widget;
+﻿using Android.Content;
+using Android.Provider;
+using System;
 
 namespace HearMeApp.Android
 {
     [BroadcastReceiver(Label = "SMS Receiver")]
-    [IntentFilter(new string[] { "android.provider.Telephony.SMS_RECEIVED" })]
     public class SmsReceiver : BroadcastReceiver
     {
-        public static readonly string IntentAction = "android.provider.Telephony.SMS_RECEIVED";
+        public static readonly string SmsReceivedAction = "android.provider.Telephony.SMS_RECEIVED";
+
+        public EventHandler Pinged;
 
         public override void OnReceive(Context context, Intent intent)
         {
-            if (intent.HasExtra("pdus"))
+            if (intent.Action == SmsReceivedAction)
             {
-                var smsArray = (Java.Lang.Object[])intent.Extras.Get("pdus");
-                var address = "";
-                var message = "";
+                var messages = Telephony.Sms.Intents.GetMessagesFromIntent(intent);
 
-                foreach (var item in smsArray)
+                foreach (var message in messages)
                 {
-                    var sms = SmsMessage.CreateFromPdu((byte[])item, "3gpp");
-                    message += sms.MessageBody;
-                    address = sms.OriginatingAddress;
+                    if (message.DisplayOriginatingAddress.Contains("000 00 00")
+                        && message.DisplayMessageBody.Length == 1
+                        && message.DisplayMessageBody.Contains("."))
+                    {
+                        Pinged?.Invoke(this, EventArgs.Empty);
+                    }
                 }
             }
         }
