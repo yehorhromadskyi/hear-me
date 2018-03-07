@@ -7,3 +7,4 @@ build_script:
 environment:
   KEYSTORE_PASSWORD:
     secure: NcCIye1mvLM01l+Kj97JFA==
+    CAKE_SETTINGS_SKIPVERIFICATION: true
