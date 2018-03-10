@@ -61,7 +61,8 @@
     <Reference Include="Mono.Android" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AudioActivity.cs" />
+    <Compile Include="Message.cs" />
+    <Compile Include="MessageReceivedEventArgs.cs" />
     <Compile Include="Secrets.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
