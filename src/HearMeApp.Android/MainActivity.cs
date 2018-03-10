@@ -1,5 +1,6 @@
 ﻿using System;
 using Android.App;
+using Android.App.Job;
 using Android.Content;
 using Android.Media;
 using Android.OS;
@@ -17,8 +18,21 @@ namespace HearMeApp.Android
         {
             base.OnCreate(savedInstanceState);
 
-            var serviceIntent = new Intent(this, typeof(SmsService));
-            StartService(serviceIntent);
+            Java.Lang.Class javaClass = Java.Lang.Class.FromType(typeof(SmsService));
+            ComponentName component = new ComponentName(this, javaClass);
+
+            JobInfo.Builder builder = new JobInfo.Builder(999, component);
+            JobInfo jobInfo = builder.Build();
+            JobScheduler jobScheduler = (JobScheduler)GetSystemService(JobSchedulerService);
+            int result = jobScheduler.Schedule(jobInfo);
+            if (result == JobScheduler.ResultSuccess)
+            {
+                // The job was scheduled.
+            }
+            else
+            {
+                // Couldn't schedule the job.
+            }
 
             SetContentView(Resource.Layout.Main);
 
