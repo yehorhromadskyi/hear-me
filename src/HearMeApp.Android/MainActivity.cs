@@ -4,6 +4,7 @@ using Android.App.Job;
 using Android.Content;
 using Android.Media;
 using Android.OS;
+using Android.Runtime;
 using Android.Widget;
 using HockeyApp.Android;
 
@@ -18,27 +19,16 @@ namespace HearMeApp.Android
         {
             base.OnCreate(savedInstanceState);
 
-            Java.Lang.Class javaClass = Java.Lang.Class.FromType(typeof(SmsService));
-            ComponentName component = new ComponentName(this, javaClass);
-
-            JobInfo.Builder builder = new JobInfo.Builder(999, component);
-            JobInfo jobInfo = builder.Build();
-            JobScheduler jobScheduler = (JobScheduler)GetSystemService(JobSchedulerService);
-            int result = jobScheduler.Schedule(jobInfo);
-            if (result == JobScheduler.ResultSuccess)
-            {
-                // The job was scheduled.
-            }
-            else
-            {
-                // Couldn't schedule the job.
-            }
-
             SetContentView(Resource.Layout.Main);
 
             PlayButton = FindViewById<Button>(Resource.Id.btn_play);
 
             PlayButton.Click += OnPlayButtonClick;
+
+            var intent = new Intent(this, typeof(SmsReceiver));
+            var pending = PendingIntent.GetBroadcast(this, 0, intent, PendingIntentFlags.UpdateCurrent);
+            var alarmManager = GetSystemService(AlarmService).JavaCast<AlarmManager>();
+            alarmManager.Set(AlarmType.ElapsedRealtimeWakeup, SystemClock.ElapsedRealtime() + 5 * 1000, pending);
         }
 
         protected override void OnResume()
@@ -55,7 +45,7 @@ namespace HearMeApp.Android
         protected override void OnDestroy()
         {
             base.OnDestroy();
-
+            
             PlayButton.Click -= OnPlayButtonClick;
         }
     }

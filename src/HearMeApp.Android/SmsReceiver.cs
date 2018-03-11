@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.Provider;
+using Android.Widget;
 using System;
 
 namespace HearMeApp.Android
@@ -11,22 +12,22 @@ namespace HearMeApp.Android
     {
         public static readonly string SmsReceivedAction = "android.provider.Telephony.SMS_RECEIVED";
 
-        public EventHandler<MessageReceivedEventArgs> MessageReceived;
-
         public override void OnReceive(Context context, Intent intent)
         {
+            if (intent.Action != SmsReceivedAction)
+            {
+                return;
+            }
+
             var smsArray = Telephony.Sms.Intents.GetMessagesFromIntent(intent);
 
             foreach (var sms in smsArray)
             {
-                var message = new Message
-                {
-                    Sender = sms.DisplayOriginatingAddress,
-                    Text = sms.DisplayMessageBody
-                };
-
-                MessageReceived?.Invoke(this, new MessageReceivedEventArgs { Message = message });
+                Toast.MakeText(context, string.Format("{0} - {1}", sms.DisplayOriginatingAddress, sms.DisplayMessageBody), ToastLength.Short).Show();
             }
+
+            var soundNotificationIntent = new Intent(Application.Context, typeof(SoundNotificationService));
+            Application.Context.StartService(soundNotificationIntent);
         }
     }
 }
