@@ -55,12 +55,17 @@
     <Reference Include="HockeySDK.AndroidBindings, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HockeySDK.Xamarin.5.1.2\lib\MonoAndroid403\HockeySDK.AndroidBindings.dll</HintPath>
     </Reference>
+    <Reference Include="LiteDB, Version=4.1.2.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiteDB.4.1.2\lib\netstandard2.0\LiteDB.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contact.cs" />
+    <Compile Include="DatabaseProvider.cs" />
     <Compile Include="Secrets.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
