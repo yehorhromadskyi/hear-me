@@ -43,6 +43,8 @@ namespace HearMeApp.Android
         public void OnCompletion(MediaPlayer mp)
         {
             _audioService.SetStreamVolume(Stream.Music, _userVolume, VolumeNotificationFlags.PlaySound);
+
+            StopSelf();
         }
 
         public override void OnDestroy()
