@@ -90,6 +90,7 @@
     <Compile Include="Adapters\ContactsAdapter.cs" />
     <Compile Include="Contact.cs" />
     <Compile Include="DatabaseProvider.cs" />
+    <Compile Include="Helpers\SimpleSwipeHelperCallback.cs" />
     <Compile Include="Secrets.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

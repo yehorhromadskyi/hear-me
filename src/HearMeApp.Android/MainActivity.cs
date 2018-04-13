@@ -9,8 +9,10 @@ using Android.OS;
 using Android.Provider;
 using Android.Runtime;
 using Android.Support.V7.Widget;
+using Android.Support.V7.Widget.Helper;
 using Android.Widget;
 using HearMeApp.Android.Adapters;
+using HearMeApp.Android.Helpers;
 using HockeyApp.Android;
 using XamarinAndroid = Android;
 
@@ -20,6 +22,7 @@ namespace HearMeApp.Android
     public class MainActivity : Activity
     {
         ContactsAdapter _contactListAdapter;
+        SimpleSwipeHelperCallback _swipeCallback;
         DatabaseProvider _databaseProvider = new DatabaseProvider();
 
         public RecyclerView ContactsRecyclerView { get; set; }
@@ -53,17 +56,32 @@ namespace HearMeApp.Android
                 while (cursor.MoveToNext());
             }
 
-            _contactListAdapter = new ContactsAdapter(contactList.Select(c => new Contact { Name = c }).ToList());
+            // TODO:
+            contactList.Add("John Doe");
+            contactList.Add("Mark Doe");
+            contactList.Add("Jane Doe");
+
+            _contactListAdapter = new ContactsAdapter(
+                contactList.Select(c => new Contact { Name = c }).ToList());
             ContactsRecyclerView.SetAdapter(_contactListAdapter);
-            ContactsRecyclerView.SetLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.Vertical, false));
+            ContactsRecyclerView.SetLayoutManager(
+                new LinearLayoutManager(this, LinearLayoutManager.Vertical, false));
 
+            _swipeCallback = new SimpleSwipeHelperCallback();
+            var swipeHelper = new ItemTouchHelper(_swipeCallback);
+            swipeHelper.AttachToRecyclerView(ContactsRecyclerView);
 
-            //ContactsRecyclerView.ItemClick += OnItemClicked;
+            _swipeCallback.Swiped += OnContactSwiped;
 
             var intent = new Intent(this, typeof(SmsReceiver));
             var pending = PendingIntent.GetBroadcast(this, 0, intent, PendingIntentFlags.UpdateCurrent);
             var alarmManager = GetSystemService(AlarmService).JavaCast<AlarmManager>();
             alarmManager.Set(AlarmType.ElapsedRealtimeWakeup, SystemClock.ElapsedRealtime() + 5 * 1000, pending);
+        }
+
+        private void OnContactSwiped(object sender, int position)
+        {
+            _contactListAdapter.NotifyItemChanged(position);
         }
 
         private void OnItemClicked(object sender, AdapterView.ItemClickEventArgs e)
@@ -81,7 +99,7 @@ namespace HearMeApp.Android
 
         protected override void OnDestroy()
         {
-            //ContactsRecyclerView.ItemClick -= OnItemClicked;
+            _swipeCallback.Swiped -= OnContactSwiped;
 
             base.OnDestroy();
         }
