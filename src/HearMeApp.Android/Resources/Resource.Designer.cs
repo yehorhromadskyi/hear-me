@@ -369,7 +369,10 @@ namespace HearMeApp.Android
 		{
 			
 			// aapt resource value: 0x7f040000
-			public const int sax = 2130968576;
+			public const int imperial = 2130968576;
+			
+			// aapt resource value: 0x7f040001
+			public const int sax = 2130968577;
 			
 			static Raw()
 			{

@@ -21,7 +21,7 @@ namespace HearMeApp.Android
         [return: GeneratedEnum]
         public override StartCommandResult OnStartCommand(Intent intent, [GeneratedEnum] StartCommandFlags flags, int startId)
         {
-            _mediaPlayer = MediaPlayer.Create(this, Resource.Raw.sax);
+            _mediaPlayer = MediaPlayer.Create(this, Resource.Raw.imperial);
             _mediaPlayer.SetAudioAttributes(new AudioAttributes.Builder()
                                                                .SetUsage(AudioUsageKind.Media)
                                                                .SetContentType(AudioContentType.Music)
