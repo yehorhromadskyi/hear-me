@@ -122,9 +122,6 @@
     <Folder Include="Resources\mipmap-xxxhdpi\" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\raw\sax.mp3" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidResource Include="Resources\raw\imperial.mid" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
